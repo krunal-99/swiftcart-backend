@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon ./src/server.ts",
+    "build": "tsc -p .",
+    "start": "node ./dist/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "argon2": "^0.41.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.21"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "cors": "^2.8.5",
+    "nodemon": "^3.1.9",
+    "pg": "^8.14.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
