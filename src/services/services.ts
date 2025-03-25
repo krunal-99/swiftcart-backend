@@ -1,9 +1,6 @@
 import { Users } from "../entities/User";
 import { AppDataSource } from "./db";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import { Products } from "../entities/Product";
-dotenv.config();
 
 interface generateTokenProps {
   id: number;
@@ -14,7 +11,10 @@ interface generateTokenProps {
 export const userRepository = AppDataSource.getRepository(Users);
 
 export const generateToken = ({ id, name, email }: generateTokenProps) => {
-  return jwt.sign({ id, name, email }, "KJjdjkfnjkndsjkanhafuidnhfinhsad", {
+  if (!process.env.SECRET) {
+    throw new Error("SECRET environment variable is not defined");
+  }
+  return jwt.sign({ id, name, email }, process.env.SECRET, {
     expiresIn: "30d",
   });
 };

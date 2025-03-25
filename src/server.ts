@@ -1,10 +1,13 @@
 import express, { Request, Response } from "express";
 import authRoute from "./routes/authRoute";
 import { AppDataSource } from "./services/db";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(express.json());
-
+app.use(cors());
+app.use(cookieParser());
 const PORT = process.env.PORT || 4001;
 
 app.use("/api/auth", authRoute);
