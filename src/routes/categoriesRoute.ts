@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
 import { AppDataSource } from "../services/db";
-import { Product } from "../entities/Product";
+import { Category } from "../entities/Category";
 
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  const products = AppDataSource.getRepository(Product);
-  const items = await products.find();
-  res.json(items);
+  const categoriesRepo = AppDataSource.getRepository(Category);
+  const categories = await categoriesRepo.find();
+  res.json(categories);
 });
 
 export default router;

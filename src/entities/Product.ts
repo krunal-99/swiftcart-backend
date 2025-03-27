@@ -1,62 +1,59 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Brand } from "./Brand";
+import { Review } from "./Review";
 
-interface Reviews {
-  username: string;
-  rating: number;
-  comment: string;
-}
-
-@Entity()
-@Unique(["title"])
-export class Products {
+@Entity("products")
+export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "varchar", length: 255, unique: true })
+  @Column()
   title: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
+  @Column()
   type: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
-  category: string;
+  @ManyToOne(() => Brand, (brand) => brand.products)
+  @JoinColumn({ name: "brandId" })
+  brand: Brand;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
-  brand: string;
+  @Column()
+  brandId: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
+  @Column("decimal", { precision: 10, scale: 2 })
   originalPrice: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
+  @Column("decimal", { precision: 10, scale: 2 })
   salePrice: number;
 
-  @Column({
-    type: "decimal",
-    precision: 3,
-    scale: 2,
-    default: 0,
-    nullable: false,
-  })
+  @Column("decimal", { precision: 3, scale: 1, nullable: true })
   rating: number;
 
-  @Column({ type: "int", default: 0, nullable: false })
+  @Column({ default: 0 })
   reviewCount: number;
 
-  @Column({ type: "text", nullable: false })
+  @Column()
   shortDescription: string;
 
-  @Column({ type: "text", nullable: false })
+  @Column("text")
   detailDescription: string;
 
-  @Column({ type: "text", nullable: true })
+  @Column("text")
   additionalInformation: string;
 
-  @Column({ type: "jsonb", nullable: false })
+  @Column("jsonb")
   colors: string[];
 
-  @Column({ type: "jsonb", nullable: false })
-  reviews: Reviews[];
-
-  @Column({ type: "jsonb", nullable: false })
+  @Column("jsonb")
   imageUrls: string[];
+
+  @OneToMany(() => Review, (review) => review.product)
+  reviews: Review[];
 }
