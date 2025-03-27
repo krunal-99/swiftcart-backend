@@ -3,6 +3,7 @@ import authRoute from "./routes/authRoute";
 import { AppDataSource } from "./services/db";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import productRoute from "./routes/productRoute";
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,7 @@ app.use(cookieParser());
 const PORT = process.env.PORT || 4001;
 
 app.use("/api/auth", authRoute);
+app.use("/products", productRoute);
 
 AppDataSource.initialize()
   .then(() => {

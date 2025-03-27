@@ -58,7 +58,13 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       name: userExists.name,
       email: userExists.email,
     });
-    res.json({ status: "success", data: "Login successful.", token: token });
+    res.json({
+      status: "success",
+      data: "Login successful.",
+      token: token,
+      name: userExists.name,
+      imageUrl: userExists.imageUrl,
+    });
   } else {
     res.json({ status: "failed", data: "Invalid credentials." });
   }
