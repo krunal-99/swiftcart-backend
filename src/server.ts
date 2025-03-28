@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
-import authRoute from "./routes/authRoute";
+import authRoute from "./routes/auth";
 import { AppDataSource } from "./services/db";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import productRoute from "./routes/productRoute";
-import categoriesRoute from "./routes/categoriesRoute";
+import productRoute from "./routes/product";
+import categoriesRoute from "./routes/categories";
 
 const app = express();
 app.use(express.json());

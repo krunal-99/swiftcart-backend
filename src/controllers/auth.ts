@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
-import { generateToken, userRepository } from "../services/services";
+import { generateToken, userRepo } from "../services/services";
 import argon2 from "argon2";
 
-export const getAllUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const users = await userRepository.find();
+    const users = await userRepo.find();
     if (users.length === 0) {
       res.json({ status: "failed", data: "No users found." });
     } else {
@@ -24,7 +21,7 @@ export const registerUser = async (
   res: Response
 ): Promise<void> => {
   const { name, imageUrl, email, password } = req.body;
-  const userExists = await userRepository.findOne({ where: { email } });
+  const userExists = await userRepo.findOne({ where: { email } });
   if (userExists) {
     res.json({ status: "failed", data: "User already exists." });
     return;
@@ -32,7 +29,7 @@ export const registerUser = async (
   const hashedPassword = await argon2.hash(password);
   const newUser = { name, imageUrl, email, password: hashedPassword };
   try {
-    const userSaved = await userRepository.save(newUser);
+    const userSaved = await userRepo.save(newUser);
     res.json({ status: "success", data: "User registered successfully." });
   } catch (error) {
     console.error(error);
@@ -43,7 +40,7 @@ export const registerUser = async (
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
-  const userExists = await userRepository.findOne({ where: { email } });
+  const userExists = await userRepo.findOne({ where: { email } });
 
   if (!userExists) {
     res.json({ status: "failed", data: "Email doesn't exists." });

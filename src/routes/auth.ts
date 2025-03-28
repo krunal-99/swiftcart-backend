@@ -1,9 +1,5 @@
 import express from "express";
-import {
-  getAllUsers,
-  loginUser,
-  registerUser,
-} from "../controllers/authControllers";
+import { getAllUsers, loginUser, registerUser } from "../controllers/auth";
 import { signUpValidation } from "../middlewares/signUpValidation";
 import { loginValidation } from "../middlewares/loginValidation";
 
