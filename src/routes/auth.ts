@@ -1,7 +1,7 @@
 import express from "express";
 import { getAllUsers, loginUser, registerUser } from "../controllers/auth";
-import { signUpValidation } from "../middlewares/signUpValidation";
-import { loginValidation } from "../middlewares/loginValidation";
+import { signUpValidation } from "../middlewares/signUp";
+import { loginValidation } from "../middlewares/login";
 
 const router = express.Router();
 

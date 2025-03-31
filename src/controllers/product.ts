@@ -32,7 +32,10 @@ export const getAdvertisements = async (req: Request, res: Response) => {
 export const getProductById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const product = await productsRepo.find({ where: { id: Number(id) } });
+    const product = await productsRepo.find({
+      where: { id: Number(id) },
+      relations: ["reviews"],
+    });
     res.status(200).json({ status: "success", data: product });
   } catch (error) {
     res.status(500).json({ status: "failed", data: error });

@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
-import authRoute from "./routes/auth";
 import { AppDataSource } from "./services/db";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import authRoute from "./routes/auth";
+import brandsRoute from "./routes/brand";
+import categoriesRoute from "./routes/category";
 import productRoute from "./routes/product";
-import categoriesRoute from "./routes/categories";
 
 const app = express();
 app.use(express.json());
@@ -13,8 +14,9 @@ app.use(cookieParser());
 const PORT = process.env.PORT || 4001;
 
 app.use("/api/auth", authRoute);
-app.use("/products", productRoute);
+app.use("/brands", brandsRoute);
 app.use("/categories", categoriesRoute);
+app.use("/products", productRoute);
 
 AppDataSource.initialize()
   .then(() => {
@@ -26,5 +28,5 @@ AppDataSource.initialize()
   .catch((err) => console.error("Error connecting to database: ", err));
 
 app.get("/", async (req: Request, res: Response) => {
-  res.json("Heyy.");
+  res.send("Heyy");
 });
