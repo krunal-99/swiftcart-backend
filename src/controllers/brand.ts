@@ -1,25 +1,24 @@
 import { Request, Response } from "express";
-import { brandsRepo } from "../services/services";
+import { brandsRepo } from "../utils/services";
 
-export const getAllBrands = async (req: Request, res: Response) => {
+export const getAvailableBrands = async (req: Request, res: Response) => {
   try {
-    const brands = await brandsRepo.find();
-    res.json({ status: "success", data: brands });
-  } catch (error) {
-    res.json({ status: "failed", data: error });
-  }
-};
+    const categoryId = parseInt(req.query.category as string, 10) || 1;
 
-export const getBrandByCategoryId = async (req: Request, res: Response) => {
-  const { id } = req.params;
-
-  try {
-    const brands = await brandsRepo.find({
-      where: { categoryId: Number(id) },
-      relations: ["category"],
-    });
-    res.json({ status: "success", data: brands });
+    let brands;
+    if (categoryId > 1) {
+      brands = await brandsRepo.find({
+        where: { categoryId },
+        order: { name: "ASC" },
+      });
+    } else {
+      brands = await brandsRepo.find({
+        order: { name: "ASC" },
+      });
+    }
+    res.status(200).json({ status: "success", data: brands });
   } catch (error) {
-    res.json({ status: "failed", data: error });
+    console.error("Error in getAvailableBrands:", error);
+    res.status(400).json({ status: "failed", message: error });
   }
 };

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { generateToken, userRepo } from "../services/services";
 import argon2 from "argon2";
+import { generateToken, userRepo } from "../utils/services";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -11,7 +11,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
       res.json({ status: "success", data: users });
     }
   } catch (error) {
-    console.error(error);
     res.json({ status: "failed", data: "Interval Server Error." });
   }
 };
@@ -32,7 +31,6 @@ export const registerUser = async (
     const userSaved = await userRepo.save(newUser);
     res.json({ status: "success", data: "User registered successfully." });
   } catch (error) {
-    console.error(error);
     res.json({ status: "failed", data: "Interval Server Error." });
   }
 };
