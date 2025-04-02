@@ -63,23 +63,22 @@ export const getFilteredProducts = async (req: Request, res: Response) => {
         query = query
           .orderBy("product.rating", "DESC")
           .addOrderBy("product.reviewCount", "DESC");
-
-        const total = await query.getCount();
-
-        query = query.skip((page - 1) * limit).take(limit);
-
-        const products = await query.getMany();
-
-        res.status(200).json({
-          status: "success",
-          data: {
-            products,
-            total,
-            page,
-            pages: Math.ceil(total / limit),
-          },
-        });
     }
+    const total = await query.getCount();
+
+    query = query.skip((page - 1) * limit).take(limit);
+
+    const products = await query.getMany();
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        products,
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("Error in getFilteredProducts:", error);
     res.status(400).json({ status: "failed", data: error });
