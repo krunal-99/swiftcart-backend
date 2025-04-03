@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { Brand } from "./Brand";
 import { Review } from "./Review";
+import { Wishlist } from "./Wishlist";
 
 @Entity("products")
 export class Product {
@@ -56,4 +57,7 @@ export class Product {
 
   @OneToMany(() => Review, (review) => review.product)
   reviews: Review[];
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.product)
+  wishlist: Wishlist[];
 }
