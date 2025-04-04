@@ -14,6 +14,6 @@ router.get("/:userId", getWishListByUserId);
 
 router.post("/add", addToWishlist);
 
-router.delete("/remove", removeFromWishlist);
+router.delete("/remove/:id", removeFromWishlist);
 
 export default router;
