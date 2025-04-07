@@ -19,9 +19,6 @@ export class CartItem {
   @Column({ default: 1 })
   quantity: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 2 })
-  priceAtTime: number;
-
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   addedAt: Date;
 }
