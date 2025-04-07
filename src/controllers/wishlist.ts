@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import { wishlistRepo } from "../utils/services";
 
 export const getAllWishlistItems = async (req: Request, res: Response) => {
-  const wishlistItems = await wishlistRepo.find({ relations: ["product"] });
-
+  const wishlistItems = await wishlistRepo.find({
+    relations: ["product"],
+  });
   res.status(201).json({ status: "success", data: wishlistItems });
 };
 
@@ -42,10 +43,11 @@ export const removeFromWishlist = async (req: Request, res: Response) => {
       res.status(404).json({ message: "Wishlist item not found" });
       return;
     }
-    await wishlistRepo.remove(wishlistEntry);
+    const deletedItem = await wishlistRepo.remove(wishlistEntry);
     res.status(201).json({
       status: "success",
-      data: "Product removed successfully from Wishlist",
+      data: deletedItem,
+      message: "Item removed successfully from wishlist",
     });
   } catch (err) {
     res.status(500).json({ message: "Server Error" });
