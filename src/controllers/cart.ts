@@ -12,6 +12,55 @@ export const getAllCartItems = async (req: Request, res: Response) => {
   }
 };
 
+export const addToCart = async (req: Request, res: Response) => {
+  const { userId, productId, quantity, selectedColor } = req.body;
+  try {
+    let cart = await cartRepo.findOne({
+      where: { user: { id: userId } },
+      relations: ["items", "items.product"],
+    });
+
+    if (!cart) {
+      cart = cartRepo.create({ user: { id: userId }, items: [] });
+      await cartRepo.save(cart);
+    }
+
+    const existingItem = cart.items.find(
+      (item) =>
+        item.product.id === productId && item.selectedColor === selectedColor
+    );
+
+    if (existingItem) {
+      existingItem.quantity += quantity;
+      await cartItemRepo.save(existingItem);
+    } else {
+      const newItem = cartItemRepo.create({
+        product: { id: productId },
+        quantity,
+        selectedColor,
+        cart,
+      });
+      await cartItemRepo.save(newItem);
+      cart.items.push(newItem);
+      await cartRepo.save(cart);
+    }
+    const updatedCart = await cartRepo.findOne({
+      where: { id: cart.id },
+      relations: ["items", "items.product"],
+    });
+    res.status(201).json({
+      status: "success",
+      data: updatedCart,
+      message: "Item added to cart successfully",
+    });
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    res
+      .status(500)
+      .json({ status: "failed", message: "Internal server error" });
+  }
+};
+
 export const getCartByUser = async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {
@@ -100,6 +149,15 @@ export const updateCartItem = async (req: Request, res: Response) => {
       res.status(404).json({
         status: "failed",
         message: "Cart item not found",
+      });
+      return;
+    }
+
+    if (quantity > 5) {
+      res.status(500).json({
+        status: "failed",
+        data: item,
+        message: "Cart quantity limit is 5.",
       });
       return;
     }

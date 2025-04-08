@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addToCart,
   clearCart,
   getAllCartItems,
   getCartByUser,
@@ -10,6 +11,8 @@ import {
 const router = express.Router();
 
 router.get("/", getAllCartItems);
+
+router.post("/", addToCart);
 
 router.get("/:userId", getCartByUser);
 
