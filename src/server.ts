@@ -8,6 +8,7 @@ import productRoute from "./routes/product";
 import wishlistRoute from "./routes/wishlist";
 import cartRoute from "./routes/cart";
 import addressRoute from "./routes/address";
+import paymentRoute from "./routes/payment";
 import { AppDataSource } from "./utils/db";
 
 const app = express();
@@ -23,6 +24,7 @@ app.use("/products", productRoute);
 app.use("/wishlist", wishlistRoute);
 app.use("/cart", cartRoute);
 app.use("/address", addressRoute);
+app.use("/payment", paymentRoute);
 
 AppDataSource.initialize()
   .then(() => {
