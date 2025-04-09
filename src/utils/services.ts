@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import { generateTokenProps } from "./types";
 import { Cart } from "../entities/Cart";
 import { CartItem } from "../entities/CartItem";
+import { Address } from "../entities/Address";
 
 export const userRepo = AppDataSource.getRepository(Users);
 export const productsRepo = AppDataSource.getRepository(Product);
@@ -18,6 +19,7 @@ export const reviewsRepo = AppDataSource.getRepository(Review);
 export const wishlistRepo = AppDataSource.getRepository(Wishlist);
 export const cartRepo = AppDataSource.getRepository(Cart);
 export const cartItemRepo = AppDataSource.getRepository(CartItem);
+export const addressRepo = AppDataSource.getRepository(Address);
 
 export const generateToken = (payload: generateTokenProps) => {
   if (!process.env.SECRET) {
