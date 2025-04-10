@@ -12,10 +12,10 @@ import paymentRoute from "./routes/payment";
 import { AppDataSource } from "./utils/db";
 
 const app = express();
-app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
-const PORT = process.env.PORT || 4001;
+app.use(express.json());
+const PORT = process.env.PORT;
 
 app.use("/api/auth", authRoute);
 app.use("/brands", brandsRoute);
