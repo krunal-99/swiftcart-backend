@@ -86,3 +86,23 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ status: "failed", data: "Internal Server Error" });
   }
 };
+
+export const getUserById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const user = await userRepo.findOne({
+      where: { id: parseInt(id) },
+      relations: ["addresses"],
+    });
+    if (!user) {
+      res.status(404).json({ status: "failed", message: "User not found" });
+    } else {
+      res.status(201).json({ status: "success", data: user });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "failed", message: "Internal Server Error." });
+  }
+};

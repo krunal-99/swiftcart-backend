@@ -1,11 +1,17 @@
 import express, { Request, Response } from "express";
-import { getAllUsers, loginUser, registerUser } from "../controllers/auth";
+import {
+  getAllUsers,
+  getUserById,
+  loginUser,
+  registerUser,
+} from "../controllers/auth";
 import { signUpValidation } from "../middlewares/signup";
 import { loginValidation } from "../middlewares/login";
 import { authMiddleware } from "../middlewares/auth";
 
 const router = express.Router();
 
+router.get("/:id", getUserById);
 router.get("/register", getAllUsers);
 router.post("/register", signUpValidation, registerUser);
 router.post("/login", loginValidation, loginUser);
