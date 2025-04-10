@@ -43,7 +43,6 @@ export const registerUser = async (
       token,
       user: { id: userSaved.id, name, email, imageUrl },
     });
-    res.json({ status: "failed", data: "Interval Server Error." });
   } catch (error) {
     res.status(500).json({ status: "failed", data: "Internal Server Error." });
   }
