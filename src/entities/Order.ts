@@ -32,9 +32,6 @@ export class Order {
   @Column({ type: "varchar", length: 50 })
   paymentMethod: string;
 
-  @Column({ type: "varchar", length: 50, nullable: true })
-  paymentLast4: string;
-
   @Column({ type: "varchar", length: 150, nullable: true })
   paymentEmail: string;
 
