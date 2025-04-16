@@ -11,7 +11,7 @@ import { OrderItem } from "./OrderItem";
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ type: "date" })
   date: string;
@@ -37,6 +37,9 @@ export class Order {
 
   @Column({ type: "varchar", length: 50, default: "Pending" })
   paymentStatus: string;
+
+  @Column({ type: "varchar", length: 150, nullable: true })
+  sessionId: string;
 
   @ManyToOne(() => Users, (users) => users.order)
   users: Users;

@@ -1,11 +1,20 @@
 import express, { Request, Response } from "express";
 import Stripe from "stripe";
 import { CartItem } from "../entities/CartItem";
+import { createOrderAfterPayment } from "../controllers/orders";
+
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 const router = express.Router();
 
 router.post("/create-checkout-session", async (req: Request, res: Response) => {
-  const { products, email } = req.body;
+  const { products, email, userId, addressId, cartId } = req.body;
+
+  if (!products || !userId || !addressId || !cartId) {
+    res
+      .status(400)
+      .json({ status: "failed", message: "Missing required fields" });
+    return;
+  }
 
   const lineItems = products.map((item: CartItem) => ({
     price_data: {
@@ -24,10 +33,15 @@ router.post("/create-checkout-session", async (req: Request, res: Response) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: "http://localhost:5173/success",
+      success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: "http://localhost:5173/error",
       billing_address_collection: "required",
-      customer_email: req.body.email || "unknown@example.com",
+      customer_email: email || "unknown@example.com",
+      metadata: {
+        userId: userId.toString(),
+        addressId: addressId.toString(),
+        cartId: cartId.toString(),
+      },
     });
     res.json({ id: session.id });
   } catch (error) {

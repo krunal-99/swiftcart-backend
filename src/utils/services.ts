@@ -12,6 +12,9 @@ import { CartItem } from "../entities/CartItem";
 import { Address } from "../entities/Address";
 import { Order } from "../entities/Order";
 import { OrderItem } from "../entities/OrderItem";
+import { Request, Response } from "express";
+import Stripe from "stripe";
+import { createOrderAfterPayment } from "../controllers/orders";
 
 export const userRepo = AppDataSource.getRepository(Users);
 export const productsRepo = AppDataSource.getRepository(Product);
@@ -32,4 +35,55 @@ export const generateToken = (payload: generateTokenProps) => {
   return jwt.sign(payload, process.env.SECRET, {
     expiresIn: "24h",
   });
+};
+
+const stripe = new Stripe(process.env.STRIPE_SECRET!);
+
+export const handlepayment = async (req: Request, res: Response) => {
+  const sig = req.headers["stripe-signature"] as string | undefined;
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!sig) {
+    console.error("Missing stripe-signature header");
+    res.status(400).send("Missing stripe-signature header");
+    return;
+  }
+
+  let event;
+  try {
+    const rawBody = req.body as Buffer;
+    event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret!);
+    console.log("Webhook event received:", event.type);
+
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const { userId, addressId, cartId } = session.metadata || {};
+
+      if (!userId || !addressId || !cartId) {
+        console.error("Missing metadata in session");
+        res.status(400).json({ status: "failed", message: "Missing metadata" });
+        return;
+      }
+
+      try {
+        await createOrderAfterPayment({
+          userId: parseInt(userId),
+          addressId: parseInt(addressId),
+          cartId: parseInt(cartId),
+          paymentEmail: session.customer_email || "",
+          sessionId: session.id,
+        });
+        console.log("Order created successfully");
+        res.status(200).json({ received: true });
+      } catch (error) {
+        console.error("Error processing order:", error);
+        res.status(500).json({ error: "Failed to process order" });
+      }
+    } else {
+      res.status(200).json({ received: true });
+    }
+  } catch (err) {
+    console.error("Webhook signature verification failed:", err);
+    res.status(400).send(`Webhook Error: ${err}`);
+  }
 };

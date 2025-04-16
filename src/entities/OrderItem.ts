@@ -4,7 +4,7 @@ import { Order } from "./Order";
 @Entity()
 export class OrderItem {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ type: "varchar" })
   name: string;

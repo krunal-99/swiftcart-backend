@@ -11,10 +11,18 @@ import addressRoute from "./routes/address";
 import paymentRoute from "./routes/payment";
 import ordersRoute from "./routes/orders";
 import { AppDataSource } from "./utils/db";
+import { handlepayment } from "./utils/services";
 
 const app = express();
 app.use(cookieParser());
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
+
+app.post(
+  "/api/webhook",
+  express.raw({ type: "application/json" }),
+  handlepayment
+);
+
 app.use(express.json());
 const PORT = process.env.PORT;
 

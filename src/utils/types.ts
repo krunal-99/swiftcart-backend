@@ -13,3 +13,11 @@ export interface JWTPayload {
   iat: number;
   exp: number;
 }
+
+export interface OrderData {
+  userId: number;
+  addressId: number;
+  cartId: number;
+  paymentEmail: string;
+  sessionId: string;
+}
