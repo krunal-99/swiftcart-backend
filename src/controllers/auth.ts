@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import argon2 from "argon2";
-import { generateToken, userRepo } from "../utils/services";
+import { addressRepo, generateToken, userRepo } from "../utils/services";
+import {
+  deleteImage,
+  getPublicIdFromUrl,
+  uploadImage,
+} from "../utils/cloudinary";
+import { Address } from "../entities/Address";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -104,5 +110,101 @@ export const getUserById = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ status: "failed", message: "Internal Server Error." });
+  }
+};
+
+export const updateUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      street,
+      city,
+      pincode,
+      country,
+      state,
+      userId,
+      firstName,
+      lastName,
+    } = req.body;
+    const imageFile = req.file;
+    if (!userId) {
+      res.status(401).json({ status: "failed", data: "Unauthorized" });
+      return;
+    }
+    const user = await userRepo.findOne({
+      where: { id: userId },
+      relations: ["addresses"],
+    });
+    if (!user) {
+      res.status(404).json({ status: "failed", data: "User not found" });
+      return;
+    }
+
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (password) user.password = await argon2.hash(password);
+
+    let imageUrl = user.imageUrl;
+    if (imageFile) {
+      if (user.imageUrl) {
+        const publicId = getPublicIdFromUrl(user.imageUrl);
+        await deleteImage(publicId);
+      }
+      const base64Image = `data:${
+        imageFile.mimetype
+      };base64,${imageFile.buffer.toString("base64")}`;
+      imageUrl = await uploadImage(base64Image);
+      user.imageUrl = imageUrl;
+    }
+    let address =
+      user.addresses.find((addr) => addr.isDefault) || user.addresses[0];
+    if (street || city || state || pincode || country) {
+      if (!address) {
+        address = new Address();
+        address.user = user;
+        address.isDefault = true;
+      }
+      if (!firstName && !address.firstName) {
+        const nameParts = (name || user.name || "").trim().split(" ");
+        address.firstName = nameParts[0] || "Unknown";
+        address.lastName = nameParts.slice(1).join(" ") || "User";
+      } else if (firstName) {
+        address.firstName = firstName;
+        address.lastName = lastName || "User";
+      }
+      if (street) address.streetAddress = street;
+      if (city) address.city = city;
+      if (state) address.state = state;
+      if (pincode) address.pincode = pincode;
+      if (country) address.country = country;
+      await addressRepo.save(address);
+    }
+    await userRepo.save(user);
+
+    const updatedUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      imageUrl: user.imageUrl,
+    };
+
+    const token = generateToken(updatedUser);
+
+    res.status(200).json({
+      status: "success",
+      data: "Profile updated successfully",
+      token,
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("In auth.ts", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal Server Error";
+    res.status(500).json({ status: "failed", data: errorMessage });
   }
 };

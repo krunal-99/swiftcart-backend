@@ -6,10 +6,10 @@ export class Address {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "varchar" })
+  @Column({ type: "varchar", nullable: true })
   firstName: string;
 
-  @Column({ type: "varchar" })
+  @Column({ type: "varchar", nullable: true })
   lastName: string;
 
   @Column({ type: "varchar" })

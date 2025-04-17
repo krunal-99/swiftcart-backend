@@ -4,10 +4,13 @@ import {
   getUserById,
   loginUser,
   registerUser,
+  updateUser,
 } from "../controllers/auth";
 import { signUpValidation } from "../middlewares/signup";
 import { loginValidation } from "../middlewares/login";
 import { authMiddleware } from "../middlewares/auth";
+import { updateUserValidation } from "../middlewares/updateUserValidation";
+import upload from "../middlewares/multer";
 
 const router = express.Router();
 
@@ -18,5 +21,12 @@ router.post("/login", loginValidation, loginUser);
 router.post("/verify", authMiddleware, async (req: Request, res: Response) => {
   res.status(200).json({ status: "success", data: "Token is valid" });
 });
+router.put(
+  "/update",
+  authMiddleware,
+  upload.single("image"),
+  updateUserValidation,
+  updateUser
+);
 
 export default router;
