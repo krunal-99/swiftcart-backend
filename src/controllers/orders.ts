@@ -60,8 +60,8 @@ export const createOrderAfterPayment = async (data: OrderData) => {
   order.users = user;
   order.date = new Date().toISOString().split("T")[0];
   order.status = "processing";
-  order.shippingAddress = `${address.firstName} ${address.lastName}, ${address.streetAddress}, ${address.city}, ${address.state}, ${address.pincode}, ${address.country}`;
-  order.estimatedDelivery = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  order.shippingAddress = `${address.streetAddress}, ${address.city}, ${address.state}, ${address.pincode}, ${address.country}`;
+  order.estimatedDelivery = new Date(Date.now() + 4 * 24 * 60 * 60 * 1000)
     .toISOString()
     .split("T")[0];
   order.paymentMethod = "card";

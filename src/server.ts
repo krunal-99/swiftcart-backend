@@ -12,6 +12,7 @@ import paymentRoute from "./routes/payment";
 import ordersRoute from "./routes/orders";
 import { AppDataSource } from "./utils/db";
 import { handlepayment } from "./utils/services";
+import { scheduleOrderStatusUpdate } from "./utils/orderStatusScheduler";
 
 const app = express();
 app.use(cookieParser());
@@ -39,6 +40,7 @@ app.use("/orders", ordersRoute);
 AppDataSource.initialize()
   .then(() => {
     console.log("Connected to database successfully.");
+    scheduleOrderStatusUpdate();
     app.listen(PORT, () => {
       console.log(`Server is running on PORT ${PORT}`);
     });
