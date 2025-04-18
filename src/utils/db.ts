@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
   username: PGUSER,
   password: PGPASSWORD,
   port: 5432,
-  entities: ["./src/entities/*{.ts,.js}"],
+  entities: ["./src/entities/*.js"],
   synchronize: true,
   ssl: { rejectUnauthorized: false },
 });
