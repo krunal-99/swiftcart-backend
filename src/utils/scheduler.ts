@@ -15,9 +15,6 @@ export const updateOrderStatuses = async () => {
     }
 
     await orderRepo.save(orders);
-    console.log(
-      `Order statuses updated successfully at ${new Date().toISOString()}`
-    );
   } catch (error) {
     console.error("Error updating order statuses:", error);
   }
@@ -25,7 +22,6 @@ export const updateOrderStatuses = async () => {
 
 export const scheduleOrderStatusUpdate = () => {
   cron.schedule("0 0 * * *", () => {
-    console.log("Running daily order status updates...");
     updateOrderStatuses();
   });
 };

@@ -53,7 +53,6 @@ export const handlepayment = async (req: Request, res: Response) => {
   try {
     const rawBody = req.body as Buffer;
     event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret!);
-    console.log("Webhook event received:", event.type);
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
@@ -73,7 +72,6 @@ export const handlepayment = async (req: Request, res: Response) => {
           paymentEmail: session.customer_email || "",
           sessionId: session.id,
         });
-        console.log("Order created successfully");
         res.status(200).json({ received: true });
       } catch (error) {
         console.error("Error processing order:", error);

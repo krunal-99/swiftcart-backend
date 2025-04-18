@@ -12,7 +12,7 @@ import paymentRoute from "./routes/payment";
 import ordersRoute from "./routes/orders";
 import { AppDataSource } from "./utils/db";
 import { handlepayment } from "./utils/services";
-import { scheduleOrderStatusUpdate } from "./utils/orderStatusScheduler";
+import { scheduleOrderStatusUpdate } from "./utils/scheduler";
 
 const app = express();
 app.use(cookieParser());
@@ -24,7 +24,8 @@ app.post(
   handlepayment
 );
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 const PORT = process.env.PORT;
 
 app.use("/api/auth", authRoute);
