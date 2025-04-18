@@ -11,6 +11,7 @@ export const AppDataSource = new DataSource({
   password: PGPASSWORD,
   port: 5432,
   entities: ["./dist/entities/*.js"],
+  // entities: ["./src/entities/*.ts"],
   synchronize: true,
   ssl: { rejectUnauthorized: false },
 });
