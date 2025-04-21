@@ -21,7 +21,7 @@ export const updateOrderStatuses = async () => {
 };
 
 export const scheduleOrderStatusUpdate = () => {
-  cron.schedule("0 0 * * *", () => {
+  cron.schedule("* * * * *", () => {
     updateOrderStatuses();
   });
 };

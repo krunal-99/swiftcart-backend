@@ -32,6 +32,7 @@ app.post(
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 const PORT = process.env.PORT;
+scheduleOrderStatusUpdate();
 
 app.use("/api/auth", authRoute);
 app.use("/brands", brandsRoute);
@@ -46,7 +47,7 @@ app.use("/orders", ordersRoute);
 AppDataSource.initialize()
   .then(() => {
     console.log("Connected to database successfully.");
-    scheduleOrderStatusUpdate();
+
     app.listen(PORT, () => {
       console.log(`Server is running on PORT ${PORT}`);
     });
