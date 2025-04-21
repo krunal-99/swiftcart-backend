@@ -32,7 +32,13 @@ export const authMiddleware = async (
       res.status(401).json({ status: "failed", data: "Token expired" });
       return;
     }
-    res.status(401).json({ status: "failed", data: "Invalid token" });
+    res
+      .status(401)
+      .json({
+        status: "failed",
+        data: "Invalid token",
+        message: "Authorization failed. Please login again to continue.",
+      });
     return;
   }
 };
