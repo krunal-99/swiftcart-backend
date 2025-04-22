@@ -8,18 +8,14 @@ export const authMiddleware = async (
 ) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
-
     if (!token) {
       res.status(401).json({ status: "failed", data: "No token provided." });
       return;
     }
-
     if (!process.env.SECRET) {
       throw new Error("SECRET environment variable is not defined");
     }
-
     const decoded = jwt.verify(token, process.env.SECRET) as JWTPayload;
-
     (req as any).user = {
       id: decoded.id,
       email: decoded.email,
@@ -32,13 +28,11 @@ export const authMiddleware = async (
       res.status(401).json({ status: "failed", data: "Token expired" });
       return;
     }
-    res
-      .status(401)
-      .json({
-        status: "failed",
-        data: "Invalid token",
-        message: "Authorization failed. Please login again to continue.",
-      });
+    res.status(401).json({
+      status: "failed",
+      data: "Invalid token",
+      message: "Authorization failed. Please login again to continue.",
+    });
     return;
   }
 };

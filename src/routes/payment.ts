@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import Stripe from "stripe";
 import { CartItem } from "../entities/CartItem";
-import { createOrderAfterPayment } from "../controllers/orders";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 const router = express.Router();

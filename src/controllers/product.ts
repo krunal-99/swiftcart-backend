@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { ILike, In } from "typeorm";
-import { brandsRepo, productsRepo } from "../utils/services";
+import { In } from "typeorm";
+import { productsRepo } from "../utils/services";
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
