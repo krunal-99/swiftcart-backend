@@ -2,10 +2,15 @@ import { Request, Response } from "express";
 import { In } from "typeorm";
 import { productsRepo } from "../utils/services";
 
-export const getAllProducts = async (req: Request, res: Response) => {
+export const getRandomProducts = async (req: Request, res: Response) => {
   try {
-    const items = await productsRepo.find();
-    res.status(200).json({ status: "success", data: items });
+    const count = 8;
+    const randomProducts = await productsRepo
+      .createQueryBuilder("product")
+      .orderBy("RANDOM()")
+      .limit(count)
+      .getMany();
+    res.status(200).json({ status: "success", data: randomProducts });
   } catch (error) {
     res.status(400).json({ status: "failed", data: error });
   }

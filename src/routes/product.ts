@@ -1,16 +1,16 @@
 import express from "express";
 import {
   getAdvertisements,
-  getAllProducts,
   getFeaturedProducts,
   getFilteredProducts,
   getMaxProductPrice,
   getProductById,
+  getRandomProducts,
 } from "../controllers/product";
 
 const router = express.Router();
 
-router.get("/", getAllProducts);
+router.get("/", getRandomProducts);
 
 router.get("/filters", getFilteredProducts);
 
