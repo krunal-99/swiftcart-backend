@@ -4,14 +4,14 @@ import { addressRepo, userRepo } from "../utils/services";
 export const createAddress = async (req: Request, res: Response) => {
   const {
     userId,
-    firstName,
-    lastName,
+    first_name,
+    last_name,
     address,
     city,
     state,
     pincode,
     country,
-    isDefault,
+    is_default,
   } = req.body;
 
   try {
@@ -24,26 +24,26 @@ export const createAddress = async (req: Request, res: Response) => {
       return;
     }
 
-    if (isDefault) {
+    if (is_default) {
       const existingDefault = await addressRepo.findOne({
-        where: { user: { id: userId }, isDefault: true },
+        where: { user: { id: userId }, is_default: true },
       });
       if (existingDefault) {
         await addressRepo.update(
           { id: existingDefault.id },
-          { isDefault: false }
+          { is_default: false }
         );
       }
     }
     const newAddress = addressRepo.create({
-      firstName,
-      lastName,
-      streetAddress: address,
+      first_name,
+      last_name,
+      street_address: address,
       city,
       state,
       pincode,
       country,
-      isDefault: isDefault || false,
+      is_default: is_default || false,
       user,
     });
     await addressRepo.save(newAddress);
@@ -62,7 +62,7 @@ export const getUserAddresses = async (req: Request, res: Response) => {
   try {
     const addresses = await addressRepo.find({
       where: { user: { id: parseInt(userId) } },
-      order: { isDefault: "DESC" },
+      order: { is_default: "DESC" },
     });
 
     res.status(200).json({

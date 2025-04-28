@@ -39,7 +39,7 @@ export const getOrderByUsers = async (req: Request, res: Response) => {
 };
 
 export const createOrderAfterPayment = async (data: OrderData) => {
-  const { userId, addressId, cartId, paymentEmail, sessionId } = data;
+  const { userId, addressId, cartId, payment_email, sessionId } = data;
 
   const user = await userRepo.findOne({ where: { id: userId } });
   const cart = await cartRepo.findOne({
@@ -60,20 +60,20 @@ export const createOrderAfterPayment = async (data: OrderData) => {
   order.users = user;
   order.date = new Date().toISOString().split("T")[0];
   order.status = "processing";
-  order.shippingAddress = `${address.streetAddress}, ${address.city}, ${address.state}, ${address.pincode}, ${address.country}`;
-  order.estimatedDelivery = new Date(Date.now() + 4 * 24 * 60 * 60 * 1000)
+  order.shipping_address = `${address.street_address}, ${address.city}, ${address.state}, ${address.pincode}, ${address.country}`;
+  order.estimated_delivery = new Date(Date.now() + 4 * 24 * 60 * 60 * 1000)
     .toISOString()
     .split("T")[0];
-  order.paymentMethod = "card";
-  order.paymentStatus = "Completed";
-  order.paymentEmail = paymentEmail;
+  order.payment_method = "card";
+  order.payment_status = "Completed";
+  order.payment_email = payment_email;
   order.sessionId = sessionId;
   order.items = [];
 
   for (const cartItem of cart.items) {
     const orderItem = new OrderItem();
     orderItem.name = cartItem.product.title;
-    orderItem.price = cartItem.product.salePrice;
+    orderItem.price = cartItem.product.sale_price;
     orderItem.quantity = cartItem.quantity;
     orderItem.image = cartItem.product.imageUrls[0];
     orderItem.order = order;

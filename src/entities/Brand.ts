@@ -18,11 +18,11 @@ export class Brand {
   name: string;
 
   @ManyToOne(() => Category, (category) => category.brands)
-  @JoinColumn({ name: "categoryId" })
+  @JoinColumn({ name: "category_id" })
   category: Category;
 
   @Column()
-  categoryId: number;
+  category_id: number;
 
   @OneToMany(() => Product, (product) => product.brand)
   products: Product[];

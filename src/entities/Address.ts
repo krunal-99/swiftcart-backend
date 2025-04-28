@@ -7,13 +7,13 @@ export class Address {
   id: number;
 
   @Column({ type: "varchar" })
-  firstName: string;
+  first_name: string;
 
   @Column({ type: "varchar" })
-  lastName: string;
+  last_name: string;
 
   @Column({ type: "varchar" })
-  streetAddress: string;
+  street_address: string;
 
   @Column({ type: "varchar" })
   city: string;
@@ -28,7 +28,7 @@ export class Address {
   country: string;
 
   @Column({ type: "boolean", default: false })
-  isDefault: boolean;
+  is_default: boolean;
 
   @ManyToOne(() => Users, (user) => user.addresses)
   user: Users;

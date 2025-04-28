@@ -8,7 +8,7 @@ export const getAvailableBrands = async (req: Request, res: Response) => {
     let brands;
     if (categoryId > 1) {
       brands = await brandsRepo.find({
-        where: { categoryId },
+        where: { category_id: categoryId },
         order: { name: "ASC" },
       });
     } else {

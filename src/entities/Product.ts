@@ -23,32 +23,32 @@ export class Product {
   type: string;
 
   @ManyToOne(() => Brand, (brand) => brand.products)
-  @JoinColumn({ name: "brandId" })
+  @JoinColumn({ name: "brand_id" })
   brand: Brand;
 
   @Column()
-  brandId: number;
+  brand_id: number;
 
   @Column("decimal", { precision: 10, scale: 2 })
-  originalPrice: number;
+  original_price: number;
 
   @Column("decimal", { precision: 10, scale: 2 })
-  salePrice: number;
+  sale_price: number;
 
   @Column("decimal", { precision: 3, scale: 1, nullable: true })
   rating: number;
 
   @Column({ default: 0 })
-  reviewCount: number;
+  review_count: number;
 
   @Column()
-  shortDescription: string;
+  short_description: string;
 
   @Column("text")
-  detailDescription: string;
+  detail_description: string;
 
   @Column("text")
-  additionalInformation: string;
+  additional_information: string;
 
   @Column("jsonb")
   colors: string[];
@@ -63,5 +63,5 @@ export class Product {
   wishlist: Wishlist[];
 
   @OneToMany(() => CartItem, (cartItem) => cartItem.product)
-  cartItems: CartItem[];
+  cart_items: CartItem[];
 }

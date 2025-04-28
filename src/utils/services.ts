@@ -69,7 +69,7 @@ export const handlepayment = async (req: Request, res: Response) => {
           userId: parseInt(userId),
           addressId: parseInt(addressId),
           cartId: parseInt(cartId),
-          paymentEmail: session.customer_email || "",
+          payment_email: session.customer_email || "",
           sessionId: session.id,
         });
         res.status(200).json({ received: true });

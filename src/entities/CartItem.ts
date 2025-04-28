@@ -10,15 +10,15 @@ export class CartItem {
   @ManyToOne(() => Cart, (cart) => cart.items)
   cart: Cart;
 
-  @ManyToOne(() => Product, (product) => product.cartItems)
+  @ManyToOne(() => Product, (product) => product.cart_items)
   product: Product;
 
   @Column()
-  selectedColor: string;
+  selected_color: string;
 
   @Column({ default: 1 })
   quantity: number;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  addedAt: Date;
+  added_at: Date;
 }

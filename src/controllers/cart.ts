@@ -27,7 +27,7 @@ export const addToCart = async (req: Request, res: Response) => {
 
     const existingItem = cart.items.find(
       (item) =>
-        item.product.id === productId && item.selectedColor === selectedColor
+        item.product.id === productId && item.selected_color === selectedColor
     );
 
     if (existingItem) {
@@ -37,7 +37,7 @@ export const addToCart = async (req: Request, res: Response) => {
       const newItem = cartItemRepo.create({
         product: { id: productId },
         quantity,
-        selectedColor,
+        selected_color: selectedColor,
         cart,
       });
       await cartItemRepo.save(newItem);

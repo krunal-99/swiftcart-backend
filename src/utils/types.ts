@@ -18,6 +18,6 @@ export interface OrderData {
   userId: number;
   addressId: number;
   cartId: number;
-  paymentEmail: string;
+  payment_email: string;
   sessionId: string;
 }

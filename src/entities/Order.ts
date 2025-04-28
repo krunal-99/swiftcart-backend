@@ -24,19 +24,19 @@ export class Order {
   status: string;
 
   @Column({ type: "varchar" })
-  shippingAddress: string;
+  shipping_address: string;
 
   @Column({ type: "date" })
-  estimatedDelivery: string;
+  estimated_delivery: string;
 
   @Column({ type: "varchar", length: 50 })
-  paymentMethod: string;
+  payment_method: string;
 
   @Column({ type: "varchar", length: 150, nullable: true })
-  paymentEmail: string;
+  payment_email: string;
 
   @Column({ type: "varchar", length: 50, default: "Pending" })
-  paymentStatus: string;
+  payment_status: string;
 
   @Column({ type: "varchar", length: 150, nullable: true })
   sessionId: string;

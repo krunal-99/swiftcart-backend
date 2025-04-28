@@ -32,7 +32,7 @@ export const getFilteredProducts = async (req: Request, res: Response) => {
     let query = productsRepo
       .createQueryBuilder("product")
       .leftJoinAndSelect("product.brand", "brand")
-      .where("product.salePrice BETWEEN :minPrice AND :maxPrice", {
+      .where("product.sale_price BETWEEN :minPrice AND :maxPrice", {
         minPrice,
         maxPrice,
       });
@@ -44,7 +44,7 @@ export const getFilteredProducts = async (req: Request, res: Response) => {
     }
 
     if (categoryId > 1) {
-      query = query.andWhere("brand.categoryId = :categoryId", { categoryId });
+      query = query.andWhere("brand.category_id = :categoryId", { categoryId });
     }
 
     if (brands.length > 0) {
@@ -53,10 +53,10 @@ export const getFilteredProducts = async (req: Request, res: Response) => {
 
     switch (sortBy) {
       case "price-low":
-        query = query.orderBy("product.salePrice", "ASC");
+        query = query.orderBy("product.sale_price", "ASC");
         break;
       case "price-high":
-        query = query.orderBy("product.salePrice", "DESC");
+        query = query.orderBy("product.sale_price", "DESC");
         break;
       case "name-asc":
         query = query.orderBy("product.title", "ASC");
@@ -67,7 +67,7 @@ export const getFilteredProducts = async (req: Request, res: Response) => {
       default:
         query = query
           .orderBy("product.rating", "DESC")
-          .addOrderBy("product.reviewCount", "DESC");
+          .addOrderBy("product.review_count", "DESC");
     }
     const total = await query.getCount();
 
@@ -94,7 +94,7 @@ export const getMaxProductPrice = async (req: Request, res: Response) => {
   try {
     const result = await productsRepo
       .createQueryBuilder("product")
-      .select("MAX(product.salePrice)", "maxPrice")
+      .select("MAX(product.sale_price)", "maxPrice")
       .getRawOne();
 
     const maxPrice = Math.ceil(result.maxPrice || 100000);

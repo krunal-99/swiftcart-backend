@@ -22,7 +22,7 @@ router.post("/create-checkout-session", async (req: Request, res: Response) => {
         name: item.product.title,
         images: item.product.imageUrls,
       },
-      unit_amount: Math.round(item.product.salePrice * 100),
+      unit_amount: Math.round(item.product.sale_price * 100),
     },
     quantity: item.quantity,
   }));
