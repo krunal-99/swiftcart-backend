@@ -10,8 +10,10 @@ export const AppDataSource = new DataSource({
   username: PGUSER,
   password: PGPASSWORD,
   port: 5432,
-  entities: [__dirname + "/../entities/*{.ts,.js}"],
+  entities: ["./dist/entities/*.js"],
+  // entities: ["./src/entities/*.ts"],
   synchronize: true,
   ssl: { rejectUnauthorized: false },
-  migrations: ["./src/migrations/*.ts"],
+  // migrations: ["./src/migrations/*.ts"],
+  migrations: ["./dist/migrations/*.js"],
 });
