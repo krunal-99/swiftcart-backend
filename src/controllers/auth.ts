@@ -89,11 +89,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const getUserById = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.user?.id;
 
   try {
     const user = await userRepo.findOne({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(id!) },
       relations: ["addresses"],
     });
     if (!user) {
@@ -113,11 +113,11 @@ export const updateUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.user?.id;
     const { name, email, password, imageUrl } = req.body;
 
     const user = await userRepo.findOne({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(id!) },
       relations: ["addresses"],
     });
 

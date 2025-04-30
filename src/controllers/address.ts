@@ -57,11 +57,11 @@ export const createAddress = async (req: Request, res: Response) => {
 };
 
 export const getUserAddresses = async (req: Request, res: Response) => {
-  const { userId } = req.params;
+  const userId = req.user?.id;
 
   try {
     const addresses = await addressRepo.find({
-      where: { user: { id: parseInt(userId) } },
+      where: { user: { id: parseInt(userId!) } },
       order: { is_default: "DESC" },
     });
 

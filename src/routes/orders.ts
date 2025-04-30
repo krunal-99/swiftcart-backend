@@ -1,16 +1,14 @@
 import express from "express";
 import {
-  getAllOrders,
   getOrderById,
   getOrderByUsers,
   getOrderBySessionId,
 } from "../controllers/orders";
+import { authMiddleware } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.get("/", getAllOrders);
-
-router.get("/:id", getOrderByUsers);
+router.get("/", authMiddleware, getOrderByUsers);
 
 router.get("/order/:orderId", getOrderById);
 

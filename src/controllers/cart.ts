@@ -1,27 +1,17 @@
 import { Request, Response } from "express";
 import { cartItemRepo, cartRepo } from "../utils/services";
 
-export const getAllCartItems = async (req: Request, res: Response) => {
-  try {
-    const cartItems = await cartRepo.find({
-      relations: ["items", "user"],
-    });
-    res.status(201).json({ status: "success", data: cartItems });
-  } catch (error) {
-    res.status(500).json({ status: "failed", data: "Internal server error." });
-  }
-};
-
 export const addToCart = async (req: Request, res: Response) => {
-  const { userId, productId, quantity, selectedColor } = req.body;
+  const { productId, quantity, selectedColor } = req.body;
+  const userId = req.user?.id;
   try {
     let cart = await cartRepo.findOne({
-      where: { user: { id: userId } },
+      where: { user: { id: +userId! } },
       relations: ["items", "items.product"],
     });
 
     if (!cart) {
-      cart = cartRepo.create({ user: { id: userId }, items: [] });
+      cart = cartRepo.create({ user: { id: +userId! }, items: [] });
       await cartRepo.save(cart);
     }
 
@@ -62,7 +52,7 @@ export const addToCart = async (req: Request, res: Response) => {
 };
 
 export const getCartByUser = async (req: Request, res: Response) => {
-  const { userId } = req.params;
+  const userId = req.user?.id;
   try {
     const [cartItems, totalCount] = await cartRepo.findAndCount({
       where: { user: { id: Number(userId) } },
@@ -112,7 +102,7 @@ export const removeFromCart = async (req: Request, res: Response) => {
 };
 
 export const clearCart = async (req: Request, res: Response) => {
-  const { userId } = req.params;
+  const userId = req.user?.id;
   try {
     const cart = await cartRepo.findOne({
       where: { user: { id: Number(userId) } },

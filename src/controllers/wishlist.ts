@@ -1,18 +1,12 @@
 import { Request, Response } from "express";
 import { wishlistRepo } from "../utils/services";
 
-export const getAllWishlistItems = async (req: Request, res: Response) => {
-  const wishlistItems = await wishlistRepo.find({
-    relations: ["product"],
-  });
-  res.status(201).json({ status: "success", data: wishlistItems });
-};
-
 export const addToWishlist = async (req: Request, res: Response) => {
-  const { productId, userId } = req.body;
+  const { productId } = req.body;
+  const userId = req.user?.id;
   try {
     const wishlistEntry = await wishlistRepo.findOne({
-      where: { user: { id: userId }, product: { id: productId } },
+      where: { user: { id: parseInt(userId!) }, product: { id: productId } },
       relations: ["product"],
     });
     if (wishlistEntry) {
@@ -20,8 +14,8 @@ export const addToWishlist = async (req: Request, res: Response) => {
       return;
     }
     await wishlistRepo.save({
-      productId,
-      userId,
+      userId: Number(userId),
+      productId: Number(productId),
     });
     res.status(201).json({
       status: "success",
@@ -55,7 +49,7 @@ export const removeFromWishlist = async (req: Request, res: Response) => {
 };
 
 export const getWishListByUserId = async (req: Request, res: Response) => {
-  const { userId } = req.params;
+  const userId = req.user?.id;
 
   try {
     const wishlistEntry = await wishlistRepo.find({

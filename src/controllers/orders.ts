@@ -10,23 +10,11 @@ import { OrderData } from "../utils/types";
 import { Order } from "../entities/Order";
 import { OrderItem } from "../entities/OrderItem";
 
-export const getAllOrders = async (req: Request, res: Response) => {
-  try {
-    const orders = await orderRepo.find();
-
-    res.status(201).json({ status: "success", data: orders });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ status: "failed", message: "Internal Server Error" });
-  }
-};
-
 export const getOrderByUsers = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const userId = req.user?.id;
   try {
     const orders = await orderRepo.find({
-      where: { users: { id: parseInt(id) } },
+      where: { users: { id: parseInt(userId!) } },
       relations: ["items"],
     });
 
