@@ -7,6 +7,7 @@ import {
   getProductById,
   getRandomProducts,
 } from "../controllers/product";
+import { userMiddleware } from "../middlewares/auth";
 
 const router = express.Router();
 
@@ -20,6 +21,6 @@ router.get("/featured", getFeaturedProducts);
 
 router.get("/ad", getAdvertisements);
 
-router.get("/:id", getProductById);
+router.get("/:id", userMiddleware, getProductById);
 
 export default router;

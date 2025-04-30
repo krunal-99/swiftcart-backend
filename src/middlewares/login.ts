@@ -1,11 +1,4 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MinLength,
-  validate,
-} from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, validate } from "class-validator";
 import { NextFunction, Request, Response } from "express";
 
 class LoginUser {

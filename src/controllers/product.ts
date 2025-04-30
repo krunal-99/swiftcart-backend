@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { In } from "typeorm";
-import { productsRepo } from "../utils/services";
+import { productsRepo, wishlistRepo } from "../utils/services";
 
 export const getRandomProducts = async (req: Request, res: Response) => {
   try {
@@ -28,7 +28,6 @@ export const getFilteredProducts = async (req: Request, res: Response) => {
       ? (req.query.brands as string).split(",")
       : [];
     const sortBy = (req.query.sortBy as string) || "popularity";
-
     let query = productsRepo
       .createQueryBuilder("product")
       .leftJoinAndSelect("product.brand", "brand")
@@ -126,12 +125,31 @@ export const getAdvertisements = async (req: Request, res: Response) => {
 
 export const getProductById = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const userId = req.user?.id;
   try {
     const product = await productsRepo.find({
       where: { id: Number(id) },
       relations: ["reviews"],
     });
-    res.status(200).json({ status: "success", data: product[0] });
+    if (!product[0]) {
+      res.status(404).json({ status: "failed", message: "Product not found" });
+      return;
+    }
+    let isInWishlist = false;
+    if (userId) {
+      const wishlistItem = await wishlistRepo.findOne({
+        where: {
+          userId: +userId,
+          productId: +id,
+        },
+      });
+      isInWishlist = !!wishlistItem;
+    }
+    const productWithWishlist = {
+      ...product[0],
+      isInWishlist,
+    };
+    res.status(200).json({ status: "success", data: productWithWishlist });
   } catch (error) {
     res.status(500).json({ status: "failed", data: error });
   }
