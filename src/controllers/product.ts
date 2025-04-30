@@ -131,7 +131,7 @@ export const getProductById = async (req: Request, res: Response) => {
       where: { id: Number(id) },
       relations: ["reviews"],
     });
-    res.status(200).json({ status: "success", data: product });
+    res.status(200).json({ status: "success", data: product[0] });
   } catch (error) {
     res.status(500).json({ status: "failed", data: error });
   }
