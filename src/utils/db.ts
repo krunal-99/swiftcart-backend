@@ -1,7 +1,9 @@
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 dotenv.config();
-const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
+const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, NODE_ENV } = process.env;
+
+const isProduction = NODE_ENV === "production";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -10,10 +12,10 @@ export const AppDataSource = new DataSource({
   username: PGUSER,
   password: PGPASSWORD,
   port: 5432,
-  entities: ["./dist/entities/*.js"],
-  // entities: ["./src/entities/*.ts"],
-  synchronize: true,
+  entities: isProduction ? ["./dist/entities/*.js"] : ["./src/entities/*.ts"],
+  synchronize: !isProduction,
   ssl: { rejectUnauthorized: false },
-  // migrations: ["./src/migrations/*.ts"],
-  migrations: ["./dist/migrations/*.js"],
+  migrations: isProduction
+    ? ["./dist/migrations/*.js"]
+    : ["./src/migrations/*.ts"],
 });
