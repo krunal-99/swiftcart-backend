@@ -52,7 +52,7 @@ export const signUpValidation = async (
   const errors = await validate(userInput);
 
   if (errors.length > 0) {
-    res.json({
+    res.status(402).json({
       status: "failed",
       data: errors
         .map((err) => (err.constraints ? Object.values(err.constraints) : []))
